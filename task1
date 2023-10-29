@@ -1,0 +1,37 @@
+"""
+Используя пакет multiprocessing, распараллельте на процессы процедуру
+вычисления суммы элементов матрицы (параллелить вычисление суммы по столбцам или
+строкам, итоговую сумму вычислять в общем потоке). Написанное приложение должно
+быть консольным. Аргументы командной строки – размер матрицы и ее значнеия. """
+
+import multiprocessing
+import numpy as np
+
+def sum_row(row):
+    return sum(row)
+
+def enter_matrix(n):
+    matrix = []
+    for i in range(n):
+        row = list(map(int, input(f"Enter the elements of the {i+1}th line separated by a space: ").split()))
+        matrix.append(row)
+    return matrix
+
+def main():
+    n = int(input("Enter the number of rows: "))
+    m = int(input("Enter the number of columns: "))
+    matrix = enter_matrix(n)
+    print("matrix: ", np.array(matrix))
+
+    pool = multiprocessing.Pool()
+
+    results_row = pool.map(sum_row, matrix)
+    pool.close()
+    pool.join()
+    print("sum rows:", results_row)
+
+    total_sum = sum(results_row)
+    print("total sum:", total_sum)
+
+if __name__ == "__main__":
+    main()
